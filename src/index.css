@@ -26,3 +26,58 @@ body {
 .bg-cyan\/8       { background-color: rgba(0,194,255,0.08); }
 .bg-red-500\/8    { background-color: rgba(239,68,68,0.08); }
 .bg-gold\/8       { background-color: rgba(201,168,76,0.08); }
+
+/* Blog overlay animation */
+@keyframes blogFadeIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-blog-enter {
+  animation: blogFadeIn 0.35s ease-out forwards;
+}
+
+/* Loader styles */
+.loader-glow {
+  box-shadow: 0 0 40px 12px rgba(0,194,255,0.06), inset 0 0 40px rgba(0,194,255,0.04);
+  background: radial-gradient(circle at 30% 30%, rgba(0,194,255,0.18), transparent 40%);
+  filter: blur(20px);
+}
+
+.loader-ring {
+  stroke: rgba(0,194,255,0.45);
+  stroke-linecap: round;
+}
+
+.loader-ring-1 {
+  stroke-dasharray: 10 6 2 6;
+  animation: ring-rotate 2.8s linear infinite;
+}
+.loader-ring-2 {
+  stroke-dasharray: 6 4 2 10;
+  animation: ring-rotate-rev 3.6s linear infinite;
+}
+
+.loader-dot {
+  fill: #00E5FF;
+}
+
+.loader-progress {
+  width: 12%;
+  animation: progress-grow 2.6s ease-in-out 1 forwards;
+}
+
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); transform-origin: 60px 60px; }
+  to { transform: rotate(360deg); }
+}
+@keyframes ring-rotate-rev {
+  from { transform: rotate(360deg); transform-origin: 60px 60px; }
+  to { transform: rotate(0deg); }
+}
+@keyframes progress-grow {
+  0% { width: 6%; }
+  50% { width: 48%; }
+  80% { width: 90%; }
+  100% { width: 100%; }
+}

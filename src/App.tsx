@@ -5,6 +5,11 @@ import {
   MapPin, Zap, FileText, GitBranch, Settings, Monitor, Database, Globe,
   ArrowRight, ExternalLink, Layers, Terminal, Bot
 } from 'lucide-react';
+import { marked } from 'marked';
+import article1Raw from './article-1-fnol-automation.md?raw';
+import article2Raw from './article-2-document-intelligence.md?raw';
+import article3Raw from './article-3-claims-workflow-orchestration.md?raw';
+import Loader from './components/Loader';
 
 function useIntersect(options = {}) {
   const ref = useRef<HTMLDivElement>(null);
@@ -15,6 +20,15 @@ function useIntersect(options = {}) {
     return () => obs.disconnect();
   }, [options]);
   return [ref, visible] as const;
+}
+
+function cleanArticleMarkdown(raw: string) {
+  return raw
+    .replace(/^\*\*Meta Title:\*\*.*$/gm, '')
+    .replace(/^\*\*Meta Description:\*\*.*$/gm, '')
+    .replace(/^\*\*Target Keywords:\*\*.*$/gm, '')
+    .replace(/^---$/gm, '')
+    .trim();
 }
 
 // ─── Animated pipeline SVG ───────────────────────────────────────────
@@ -473,6 +487,128 @@ function Results() {
   );
 }
 
+type BlogArticle = {
+  title: string;
+  description: string;
+  tag: string;
+  date: string;
+  author: string;
+  contentHtml: string;
+};
+
+function Blogs() {
+  const [ref, visible] = useIntersect();
+  const [selectedArticle, setSelectedArticle] = useState<BlogArticle | null>(null);
+
+  const articles: BlogArticle[] = [
+    {
+      title: 'How AI-Powered FNOL Automation Is Transforming Insurance Claims Processing in 2025',
+      description: 'A practical guide to reducing manual intake bottlenecks and accelerating claims triage with AI-powered FNOL automation.',
+      tag: 'Claims Automation',
+      date: 'June 2026',
+      author: 'Hamza Raies',
+      contentHtml: marked.parse(cleanArticleMarkdown(article1Raw)),
+    },
+    {
+      title: 'Insurance Document Intelligence: How AI-Powered OCR Is Eliminating Manual Claims Processing',
+      description: 'How intelligent document processing and AI OCR are transforming claims document workflows for insurance carriers.',
+      tag: 'Document Intelligence',
+      date: 'May 2026',
+      author: 'Hamza Raies',
+      contentHtml: marked.parse(cleanArticleMarkdown(article2Raw)),
+    },
+    {
+      title: 'Claims Workflow Automation: The Complete Guide to AI-Driven Insurance Claims Orchestration',
+      description: 'A complete guide to intelligent claims orchestration, automated routing, and STP optimization for modern carriers.',
+      tag: 'Claims Orchestration',
+      date: 'April 2026',
+      author: 'Hamza Raies',
+      contentHtml: marked.parse(cleanArticleMarkdown(article3Raw)),
+    },
+  ];
+
+  return (
+    <>
+      <section id="blogs" className="py-28 px-4 bg-[#0A0D14]">
+        <div className="max-w-6xl mx-auto">
+          <div ref={ref} className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <SectionLabel>Insights</SectionLabel>
+            <div className="mt-4 mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="font-display font-black text-4xl sm:text-5xl text-white">Latest Articles</h2>
+                <p className="text-gray-400 max-w-2xl mt-4">Stories, playbooks and frameworks for insurance claims automation, digital transformation, and faster operations.</p>
+              </div>
+              <a href="#contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cyan text-[#0A0D14] font-semibold text-sm hover:shadow-[0_0_30px_rgba(0,194,255,0.35)] transition-all duration-200">
+                Talk About Your Project <ArrowRight size={16} />
+              </a>
+            </div>
+            <div className="grid lg:grid-cols-3 gap-6">
+              {articles.map((article, index) => (
+                <div key={index} className="group rounded-3xl bg-[#0F1318] border border-white/5 p-6 hover:border-cyan/25 hover:-translate-y-1 transition-all duration-300">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan/10 text-cyan text-xs uppercase tracking-[0.2em] font-semibold mb-5">{article.tag}</span>
+                  <h3 className="font-display font-bold text-2xl text-white mb-4">{article.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-6">{article.description}</p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedArticle(article)}
+                    className="inline-flex items-center gap-2 text-cyan font-semibold text-sm hover:text-white"
+                  >
+                    Read article <ArrowRight size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {selectedArticle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#02060f]/95 backdrop-blur-xl px-4 py-6 animate-blog-enter">
+          <div className="relative w-full max-w-5xl max-h-[calc(100vh-120px)] overflow-y-auto rounded-[32px] border border-white/10 bg-[#07101a] shadow-[0_0_80px_rgba(0,194,255,0.22)] transform transition-transform duration-500">
+            <button
+              type="button"
+              onClick={() => setSelectedArticle(null)}
+              className="absolute top-5 right-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#0A0D14]/80 text-white transition hover:bg-[#0A0D14]"
+              aria-label="Close article"
+            >
+              <X size={18} />
+            </button>
+            <div className="px-8 py-8 border-b border-white/10">
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <span className="text-cyan text-xs uppercase tracking-[0.2em] font-semibold">{selectedArticle.tag}</span>
+                <span className="text-gray-500 text-xs">{selectedArticle.date}</span>
+                <span className="text-gray-500 text-xs">•</span>
+                <span className="text-gray-500 text-xs">By {selectedArticle.author}</span>
+              </div>
+              <h2 className="font-display font-black text-4xl text-white mb-4">{selectedArticle.title}</h2>
+              <p className="text-gray-400 text-lg max-w-3xl">{selectedArticle.description}</p>
+            </div>
+            <div className="px-8 py-8 text-gray-300 prose prose-invert prose-a:text-cyan prose-a:no-underline prose-blockquote:border-l-cyan prose-blockquote:border-l-4 prose-blockquote:px-4 prose-blockquote:text-gray-300">
+              <div dangerouslySetInnerHTML={{ __html: selectedArticle.contentHtml }} />
+            </div>
+            <div className="flex flex-col gap-4 border-t border-white/10 px-8 py-6 sm:flex-row sm:justify-between sm:items-center">
+              <button
+                type="button"
+                onClick={() => setSelectedArticle(null)}
+                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[#0A0D14] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0F1318] transition"
+              >
+                Back to Articles
+              </button>
+              <a
+                href="#contact"
+                onClick={() => setSelectedArticle(null)}
+                className="inline-flex items-center justify-center rounded-full bg-cyan px-5 py-3 text-sm font-semibold text-[#0A0D14] hover:shadow-[0_0_30px_rgba(0,194,255,0.35)] transition"
+              >
+                Talk to me about this
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── Tech Stack ───────────────────────────────────────────────────────
 function TechStack() {
   const [ref, visible] = useIntersect();
@@ -611,10 +747,46 @@ function Contact() {
   const [ref, visible] = useIntersect();
   const [form, setForm] = useState({ name: '', company: '', email: '', message: '', bottleneck: '' });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setFeedback(null);
+    setSending(true);
+
+    // EmailJS service and template IDs were provided by the user
+    const SERVICE_ID = 'service_192z8ue';
+    const TEMPLATE_ID = 'template_a2wg1ed';
+
+    const templateParams = {
+      from_name: form.name,
+      from_email: form.email,
+      subject: form.company ? `${form.company} - ${form.bottleneck || 'Inquiry'}` : (form.bottleneck || 'Inquiry'),
+      message: form.message,
+      to_email: 'info@hamzaraies.com'
+    };
+
+    try {
+      // Ensure EmailJS SDK loaded on window (initialized in index.html)
+      const emailjs = (window as any).emailjs;
+      if (!emailjs || !emailjs.send) throw new Error('EmailJS not available');
+
+      console.log('EmailJS send', { SERVICE_ID, TEMPLATE_ID, templateParams, emailjsReady: !!emailjs });
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+      setFeedback({ type: 'success', text: "Message sent! I'll get back to you shortly." });
+      setSent(true);
+      setForm({ name: '', company: '', email: '', message: '', bottleneck: '' });
+    } catch (err: any) {
+      console.error('Email send error', err);
+      const extra = err && (err.text || err.message || err.status || err.statusText);
+      setFeedback({
+        type: 'error',
+        text: extra ? `Something went wrong. ${extra}. Please try info@hamzaraies.com directly.` : 'Something went wrong. Please try info@hamzaraies.com directly.'
+      });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -636,7 +808,7 @@ function Contact() {
                 <p className="text-gray-400">I'll get back to you as soon as possible.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form id="contact-form" onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   {[
                     { label: 'Name', key: 'name', type: 'text', placeholder: 'Your name', required: true },
@@ -676,9 +848,19 @@ function Contact() {
                     className="w-full px-4 py-3 rounded-xl bg-[#0F1318] border border-white/8 text-white placeholder-gray-600 focus:border-cyan/50 focus:bg-cyan/5 focus:outline-none focus:ring-1 focus:ring-cyan/20 transition-all resize-none"
                   />
                 </div>
-                <button type="submit" className="w-full py-4 rounded-xl bg-cyan text-[#0A0D14] font-bold text-base hover:shadow-[0_0_40px_rgba(0,194,255,0.45)] hover:-translate-y-0.5 transition-all duration-200">
-                  Send Message
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className={`w-full py-4 rounded-xl bg-cyan text-[#0A0D14] font-bold text-base transition-all duration-200 ${sending ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-[0_0_40px_rgba(0,194,255,0.45)] hover:-translate-y-0.5'}`}
+                >
+                  {sending ? 'Sending…' : 'Send Message'}
                 </button>
+
+                {feedback && (
+                  <div className={`text-sm mt-3 ${feedback.type === 'success' ? 'text-green-400' : 'text-red-400'}`} role="status">
+                    {feedback.text}
+                  </div>
+                )}
               </form>
             )}
 
@@ -735,7 +917,11 @@ function Footer() {
           </div>
         </div>
         <p className="text-gray-600 text-sm text-center">Faster Claims. Smarter Operations. Zero Manual Drag.</p>
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end">
+          <a href="#blogs" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/20 text-cyan text-sm font-semibold hover:bg-cyan/10 transition-all duration-200">
+            Read Blogs
+            <ArrowRight size={14} />
+          </a>
           <a href="https://www.linkedin.com/in/hamza-raies/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">LinkedIn</a>
           <a href="https://github.com/HamzaRaies?tab=repositories" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">GitHub</a>
         </div>
@@ -757,18 +943,28 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 // ─── App ──────────────────────────────────────────────────────────────
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 2200);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <div className="bg-[#0A0D14] min-h-screen font-body">
+      <Loader visible={loading} />
+      <div className={`${loading ? 'pointer-events-none blur-sm select-none' : ''}`}>
       <Navbar />
       <Hero />
       <About />
       <Services />
       <HowItWorks />
       <Results />
+      <Blogs />
       <TechStack />
       <LinkedInProof />
       <Contact />
       <Footer />
+      </div>
     </div>
   );
 }
