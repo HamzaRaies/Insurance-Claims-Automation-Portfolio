@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import hamzaPhoto from './pics/Hamza.jpeg';
+import p1 from './pics/p1.png';
+import p2 from './pics/p2.png';
+import p3 from './pics/p3.png';
+import t1 from './pics/t1.jpeg';
+import t2 from './pics/t2.jpeg';
 import {
-  Menu, X, Home, Code2, Briefcase, Mail, Github, Linkedin, ChevronRight,
+  Menu, X, Home, Code2, Briefcase, Mail, Github, Linkedin, ChevronRight, ChevronLeft,
   MapPin, Zap, FileText, GitBranch, Settings, Monitor, Database, Globe,
   ArrowRight, ExternalLink, Layers, Terminal, Bot
 } from 'lucide-react';
@@ -212,17 +217,13 @@ function Hero() {
           </span>
         </h1>
 
-        <p className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-white leading-tight mb-8">
+        <p className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-white leading-tight mb-12">
           I{' '}<span className="text-gray-400">eliminate</span>{' '}manual work{' '}
           <span className="bg-gradient-to-r from-cyan to-[#00E5FF] bg-clip-text text-transparent">in claims!</span>
         </p>
 
-        <p className="text-gray-400 text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
-          Faster Closures. Zero Bottlenecks. Scalable Operations.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-16">
+        {/* CTAs - Moved to middle */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-12">
           <a href="#work" className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-cyan text-[#0A0D14] font-bold text-base hover:shadow-[0_0_40px_rgba(0,194,255,0.5)] hover:-translate-y-1 transition-all duration-200">
             See My Work <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform"/>
           </a>
@@ -230,6 +231,10 @@ function Hero() {
             Let's Talk Automation
           </a>
         </div>
+
+        <p className="text-gray-400 text-lg sm:text-xl max-w-xl mx-auto mb-16 leading-relaxed">
+          Faster Closures. Zero Bottlenecks. Scalable Operations.
+        </p>
 
         {/* Pipeline */}
         <div className="w-full">
@@ -419,6 +424,22 @@ function HowItWorks() {
 // ─── Results ──────────────────────────────────────────────────────────
 function Results() {
   const [ref, visible] = useIntersect();
+  const projectImages = [p1, p2, p3];
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = (index: number) => () => setLightboxIndex(index);
+  const closeLightbox = () => setLightboxIndex(null);
+  const showNextImage = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (lightboxIndex === null) return;
+    setLightboxIndex((lightboxIndex + 1) % projectImages.length);
+  };
+  const showPrevImage = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (lightboxIndex === null) return;
+    setLightboxIndex((lightboxIndex - 1 + projectImages.length) % projectImages.length);
+  };
+
   return (
     <section id="results" className="py-28 px-4 bg-[#0F1318]/60">
       <div className="max-w-6xl mx-auto">
@@ -432,11 +453,16 @@ function Results() {
           <div className="rounded-3xl bg-[#0A0D14] border border-cyan/15 p-8 lg:p-10 mb-6">
             <div className="grid lg:grid-cols-5 gap-10">
               <div className="lg:col-span-2">
-                <div className="aspect-video rounded-2xl bg-gradient-to-br from-[#141820] to-[#0F1318] border border-white/5 flex flex-col items-center justify-center gap-3">
-                  <div className="w-14 h-14 rounded-2xl bg-cyan/10 flex items-center justify-center">
-                    <ExternalLink size={22} className="text-cyan"/>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-white/5 bg-[#0F1318] cursor-pointer" onClick={openLightbox(0)}>
+                    <img src={p1} alt="UAE carrier project screenshot 1" className="w-full h-full object-cover" />
                   </div>
-                  <span className="text-gray-600 text-sm">UAE Carrier Project</span>
+                  <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-white/5 bg-[#0F1318] cursor-pointer" onClick={openLightbox(1)}>
+                    <img src={p2} alt="UAE carrier project screenshot 2" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="sm:col-span-2 aspect-[16/10] rounded-2xl overflow-hidden border border-white/5 bg-[#0F1318] cursor-pointer" onClick={openLightbox(2)}>
+                    <img src={p3} alt="UAE carrier project screenshot 3" className="w-full h-full object-cover" />
+                  </div>
                 </div>
               </div>
               <div className="lg:col-span-3">
@@ -464,23 +490,66 @@ function Results() {
             </div>
           </div>
 
-          {/* Placeholders */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {[1, 2].map(i => (
-              <div key={i} className="rounded-2xl border border-dashed border-white/10 bg-[#0A0D14] p-6">
-                <div className="aspect-video rounded-xl bg-[#0F1318] border border-white/5 flex flex-col items-center justify-center gap-2 mb-4">
-                  <Database size={24} className="text-gray-700"/>
-                  <p className="text-gray-700 text-xs uppercase tracking-wider">Image Upload</p>
-                  <p className="text-gray-600 text-sm">Project #{i + 1}</p>
+          {/* UAE Carrier project images */}
+          <div className="grid sm:grid-cols-3 gap-6">
+            {projectImages.map((src, i) => (
+              i === 1 ? (
+                <div key={i} className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0D14] p-2">
+                  <div className="grid grid-rows-2 gap-2 h-64">
+                    <div className="rounded-lg overflow-hidden border border-white/5 bg-black flex items-center justify-center">
+                      <img src={t1} alt="testimonial 1" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="rounded-lg overflow-hidden border border-white/5 bg-black flex items-center justify-center">
+                      <img src={t2} alt="testimonial 2" className="w-full h-full object-contain" />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="h-4 rounded bg-[#141820] w-3/4"/>
-                  <div className="h-3 rounded bg-[#141820] w-1/2"/>
+              ) : (
+                <div key={i} className="rounded-2xl overflow-hidden border border-white/10 bg-[#0A0D14] cursor-pointer" onClick={openLightbox(i)}>
+                  <img
+                    src={src}
+                    alt={`UAE carrier project screenshot ${i + 1}`}
+                    className="w-full h-64 object-cover"
+                  />
                 </div>
-              </div>
+              )
             ))}
           </div>
-          <p className="text-center text-gray-700 text-sm mt-6">[Sample project images will be added here]</p>
+
+          {lightboxIndex !== null && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-6" onClick={closeLightbox}>
+              <div className="relative mx-auto flex items-center justify-center gap-6" onClick={(event) => event.stopPropagation()}>
+                <button
+                  className="absolute top-4 right-4 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                  onClick={closeLightbox}
+                  aria-label="Close image"
+                >
+                  <X size={20} />
+                </button>
+                <button
+                  className="z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/90"
+                  onClick={showPrevImage}
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+                <div className="max-w-[80vw] max-h-[80vh] overflow-hidden rounded-3xl bg-[#0B1118] p-4 shadow-2xl shadow-black/40">
+                  <img
+                    src={projectImages[lightboxIndex]}
+                    alt={`UAE carrier project screenshot ${lightboxIndex + 1}`}
+                    className="block max-h-[72vh] max-w-[72vw] w-full rounded-3xl object-contain"
+                  />
+                </div>
+                <button
+                  className="z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/90"
+                  onClick={showNextImage}
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

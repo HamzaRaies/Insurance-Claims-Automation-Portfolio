@@ -19,8 +19,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Syne', 'sans-serif'],
-        body: ['DM Sans', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+        body: ['Plus Jakarta Sans', 'sans-serif'],
       },
       animation: {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
