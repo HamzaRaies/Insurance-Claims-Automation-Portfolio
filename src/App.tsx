@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import hamzaPhoto from './pics/Hamza.jpeg';
 import p1 from './pics/p1.png';
+import hamza2 from './pics/HR.jpeg';
 import p2 from './pics/p2.png';
 import p3 from './pics/p3.png';
 import t1 from './pics/t1.jpeg';
@@ -80,7 +80,7 @@ function PipelineSVG() {
 }
 
 // ─── Navbar ───────────────────────────────────────────────────────────
-function Navbar() {
+function Navbar({ onHomeClick }: { onHomeClick: () => void }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('home');
   const [scrolled, setScrolled] = useState(false);
@@ -101,9 +101,11 @@ function Navbar() {
   return (
     <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0A0D14]/95 backdrop-blur-xl border-b border-white/5' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
-
         {/* Logo */}
-        <a href="#" className="flex items-center gap-3 group">
+        <button 
+          onClick={() => { onHomeClick(); setActive('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className="flex items-center gap-3 group text-left"
+        >
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan to-cyan/40 flex items-center justify-center text-[#0A0D14] font-display font-black text-sm shrink-0 shadow-[0_0_20px_rgba(0,194,255,0.4)]">
             HR
           </div>
@@ -111,7 +113,7 @@ function Navbar() {
             <p className="font-display font-bold text-white text-[15px]">Hamza Raies</p>
             <p className="text-gray-500 text-[11px] tracking-widest uppercase font-body mt-0.5">Claims Automation</p>
           </div>
-        </a>
+        </button>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-1">
@@ -119,7 +121,10 @@ function Navbar() {
             <a
               key={l.id}
               href={l.href}
-              onClick={() => setActive(l.id)}
+              onClick={() => {
+                setActive(l.id);
+                if (l.id === 'home' || l.href.startsWith('#')) onHomeClick();
+              }}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
                 ${active === l.id
                   ? 'bg-white/10 text-white border border-white/10'
@@ -149,7 +154,10 @@ function Navbar() {
       {open && (
         <div className="md:hidden bg-[#0F1318]/95 backdrop-blur-xl border-t border-white/5 px-6 py-4 space-y-1">
           {links.map(l => (
-            <a key={l.id} href={l.href} className="flex items-center gap-2 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 text-sm" onClick={() => setOpen(false)}>
+            <a key={l.id} href={l.href} className="flex items-center gap-2 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 text-sm" onClick={() => {
+              onHomeClick();
+              setOpen(false);
+            }}>
               {l.icon}{l.label}
             </a>
           ))}
@@ -179,7 +187,7 @@ function Hero() {
             <div className="w-full h-full rounded-full bg-[#141820] flex items-center justify-center overflow-hidden">
               {/* Your profile photo */}
               <img 
-                src={hamzaPhoto}
+                src={hamza2}
                 alt="Hamza Raies"
                 className="w-full h-full rounded-full object-cover"
               />
@@ -565,36 +573,36 @@ type BlogArticle = {
   contentHtml: string;
 };
 
+const BLOG_ARTICLES: BlogArticle[] = [
+  {
+    title: 'How AI-Powered FNOL Automation Is Transforming Insurance Claims Processing in 2025',
+    description: 'A practical guide to reducing manual intake bottlenecks and accelerating claims triage with AI-powered FNOL automation.',
+    tag: 'Claims Automation',
+    date: 'June 2026',
+    author: 'Hamza Raies',
+    contentHtml: marked.parse(cleanArticleMarkdown(article1Raw)),
+  },
+  {
+    title: 'Insurance Document Intelligence: How AI-Powered OCR Is Eliminating Manual Claims Processing',
+    description: 'How intelligent document processing and AI OCR are transforming claims document workflows for insurance carriers.',
+    tag: 'Document Intelligence',
+    date: 'May 2026',
+    author: 'Hamza Raies',
+    contentHtml: marked.parse(cleanArticleMarkdown(article2Raw)),
+  },
+  {
+    title: 'Claims Workflow Automation: The Complete Guide to AI-Driven Insurance Claims Orchestration',
+    description: 'A complete guide to intelligent claims orchestration, automated routing, and STP optimization for modern carriers.',
+    tag: 'Claims Orchestration',
+    date: 'April 2026',
+    author: 'Hamza Raies',
+    contentHtml: marked.parse(cleanArticleMarkdown(article3Raw)),
+  },
+];
+
 function Blogs() {
   const [ref, visible] = useIntersect();
   const [selectedArticle, setSelectedArticle] = useState<BlogArticle | null>(null);
-
-  const articles: BlogArticle[] = [
-    {
-      title: 'How AI-Powered FNOL Automation Is Transforming Insurance Claims Processing in 2025',
-      description: 'A practical guide to reducing manual intake bottlenecks and accelerating claims triage with AI-powered FNOL automation.',
-      tag: 'Claims Automation',
-      date: 'June 2026',
-      author: 'Hamza Raies',
-      contentHtml: marked.parse(cleanArticleMarkdown(article1Raw)),
-    },
-    {
-      title: 'Insurance Document Intelligence: How AI-Powered OCR Is Eliminating Manual Claims Processing',
-      description: 'How intelligent document processing and AI OCR are transforming claims document workflows for insurance carriers.',
-      tag: 'Document Intelligence',
-      date: 'May 2026',
-      author: 'Hamza Raies',
-      contentHtml: marked.parse(cleanArticleMarkdown(article2Raw)),
-    },
-    {
-      title: 'Claims Workflow Automation: The Complete Guide to AI-Driven Insurance Claims Orchestration',
-      description: 'A complete guide to intelligent claims orchestration, automated routing, and STP optimization for modern carriers.',
-      tag: 'Claims Orchestration',
-      date: 'April 2026',
-      author: 'Hamza Raies',
-      contentHtml: marked.parse(cleanArticleMarkdown(article3Raw)),
-    },
-  ];
 
   return (
     <>
@@ -612,7 +620,7 @@ function Blogs() {
               </a>
             </div>
             <div className="grid lg:grid-cols-3 gap-6">
-              {articles.map((article, index) => (
+              {BLOG_ARTICLES.map((article, index) => (
                 <div key={index} className="group rounded-3xl bg-[#0F1318] border border-white/5 p-6 hover:border-cyan/25 hover:-translate-y-1 transition-all duration-300">
                   <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan/10 text-cyan text-xs uppercase tracking-[0.2em] font-semibold mb-5">{article.tag}</span>
                   <h3 className="font-display font-bold text-2xl text-white mb-4">{article.title}</h3>
@@ -972,7 +980,7 @@ function Contact() {
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────
-function Footer() {
+function Footer({ onReadBlogs }: { onReadBlogs: () => void }) {
   return (
     <footer className="py-10 px-4 border-t border-white/5 bg-[#0F1318]">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -987,10 +995,13 @@ function Footer() {
         </div>
         <p className="text-gray-600 text-sm text-center">Faster Claims. Smarter Operations. Zero Manual Drag.</p>
         <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end">
-          <a href="#blogs" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/20 text-cyan text-sm font-semibold hover:bg-cyan/10 transition-all duration-200">
+          <button 
+            onClick={(e) => { e.preventDefault(); onReadBlogs(); }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/20 text-cyan text-sm font-semibold hover:bg-cyan/10 transition-all duration-200"
+          >
             Read Blogs
             <ArrowRight size={14} />
-          </a>
+          </button>
           <a href="https://www.linkedin.com/in/hamza-raies/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">LinkedIn</a>
           <a href="https://github.com/HamzaRaies?tab=repositories" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">GitHub</a>
         </div>
@@ -1013,26 +1024,44 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 // ─── App ──────────────────────────────────────────────────────────────
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<'home' | 'blogs'>('home');
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 2200);
     return () => clearTimeout(t);
   }, []);
+
+  const handleReadBlogs = () => {
+    setView('blogs');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleHome = () => {
+    setView('home');
+  };
+
   return (
     <div className="bg-[#0A0D14] min-h-screen font-body">
       <Loader visible={loading} />
       <div className={`${loading ? 'pointer-events-none blur-sm select-none' : ''}`}>
-      <Navbar />
-      <Hero />
-      <About />
-      <Services />
-      <HowItWorks />
-      <Results />
-      <Blogs />
-      <TechStack />
-      <LinkedInProof />
-      <Contact />
-      <Footer />
+      <Navbar onHomeClick={handleHome} />
+      {view === 'blogs' ? (
+        <div className="pt-20">
+          <Blogs />
+        </div>
+      ) : (
+        <>
+          <Hero />
+          <About />
+          <Services />
+          <HowItWorks />
+          <Results />
+          <TechStack />
+          <LinkedInProof />
+          <Contact />
+        </>
+      )}
+      <Footer onReadBlogs={handleReadBlogs} />
       </div>
     </div>
   );
