@@ -200,7 +200,7 @@ function Hero() {
         <div className="flex items-center gap-3 mb-6">
           {[
             { icon: <Github size={16}/>, href: 'https://github.com/HamzaRaies?tab=repositories' },
-            { icon: <Linkedin size={16}/>, href: 'https://www.linkedin.com/in/hamza-raies/' },
+            { icon: <Linkedin size={16}/>, href: 'https://www.linkedin.com/in/hamza-raies-/' },
             { icon: <Mail size={16}/>, href: '#contact' },
           ].map((s, i) => (
             <a key={i} href={s.href} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-cyan hover:border-cyan/40 hover:bg-cyan/10 hover:shadow-[0_0_15px_rgba(0,194,255,0.2)] transition-all duration-200">
@@ -827,43 +827,47 @@ function Contact() {
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const buildMailtoLink = (currentForm: typeof form) => {
+    const subject = encodeURIComponent(
+      currentForm.company ? `${currentForm.company} - ${currentForm.bottleneck || 'Inquiry'}` : (currentForm.bottleneck || 'Inquiry')
+    );
+    const body = encodeURIComponent([
+      `Name: ${currentForm.name || 'N/A'}`,
+      `Email: ${currentForm.email || 'N/A'}`,
+      `Company: ${currentForm.company || 'N/A'}`,
+      `Bottleneck: ${currentForm.bottleneck || 'N/A'}`,
+      '',
+      currentForm.message || '',
+    ].join('\n'));
+
+    return `mailto:info@hamzaraies.com?subject=${subject}&body=${body}`;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
     setSending(true);
 
-    // EmailJS service and template IDs were provided by the user
-    const SERVICE_ID = 'service_192z8ue';
-    const TEMPLATE_ID = 'template_a2wg1ed';
+    const mailtoLink = buildMailtoLink(form);
 
-    const templateParams = {
-      from_name: form.name,
-      from_email: form.email,
-      subject: form.company ? `${form.company} - ${form.bottleneck || 'Inquiry'}` : (form.bottleneck || 'Inquiry'),
-      message: form.message,
-      to_email: 'info@hamzaraies.com'
-    };
-
-    try {
-      // Ensure EmailJS SDK loaded on window (initialized in index.html)
-      const emailjs = (window as any).emailjs;
-      if (!emailjs || !emailjs.send) throw new Error('EmailJS not available');
-
-      console.log('EmailJS send', { SERVICE_ID, TEMPLATE_ID, templateParams, emailjsReady: !!emailjs });
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
-      setFeedback({ type: 'success', text: "Message sent! I'll get back to you shortly." });
-      setSent(true);
-      setForm({ name: '', company: '', email: '', message: '', bottleneck: '' });
-    } catch (err: any) {
-      console.error('Email send error', err);
-      const extra = err && (err.text || err.message || err.status || err.statusText);
-      setFeedback({
-        type: 'error',
-        text: extra ? `Something went wrong. ${extra}. Please try info@hamzaraies.com directly.` : 'Something went wrong. Please try info@hamzaraies.com directly.'
-      });
-    } finally {
-      setSending(false);
+    if (typeof window !== 'undefined') {
+      try {
+        const popup = window.open(mailtoLink, '_blank', 'noopener,noreferrer');
+        if (!popup) {
+          window.location.href = mailtoLink;
+        }
+      } catch {
+        window.location.href = mailtoLink;
+      }
     }
+
+    setFeedback({
+      type: 'info',
+      text: 'Your email app has been opened with your message ready to send to info@hamzaraies.com.'
+    });
+    setSent(true);
+    setForm({ name: '', company: '', email: '', message: '', bottleneck: '' });
+    setSending(false);
   };
 
   return (
@@ -946,7 +950,7 @@ function Contact() {
                 <h3 className="font-display font-bold text-xl text-white mb-6">Contact Information</h3>
                 <div className="space-y-5">
                   {[
-                    { icon: <Linkedin size={18}/>, label: 'LinkedIn', value: 'linkedin.com/in/hamza-raies', href: 'https://www.linkedin.com/in/hamza-raies/' },
+                    { icon: <Linkedin size={18}/>, label: 'LinkedIn', value: 'linkedin.com/in/hamza-raies-', href: 'https://www.linkedin.com/in/hamza-raies-/' },
                     { icon: <Mail size={18}/>, label: 'Email', value: 'info@hamzaraies.com', href: 'mailto:info@hamzaraies.com' },
                     { icon: <MapPin size={18}/>, label: 'Location', value: 'Lahore, Pakistan', href: null },
                   ].map((c, i) => (
@@ -1002,7 +1006,7 @@ function Footer({ onReadBlogs }: { onReadBlogs: () => void }) {
             Read Blogs
             <ArrowRight size={14} />
           </button>
-          <a href="https://www.linkedin.com/in/hamza-raies/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">LinkedIn</a>
+          <a href="https://www.linkedin.com/in/hamza-raies-/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">LinkedIn</a>
           <a href="https://github.com/HamzaRaies?tab=repositories" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan transition-colors text-sm">GitHub</a>
         </div>
       </div>
