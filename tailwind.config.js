@@ -5,22 +5,25 @@ export default {
     extend: {
       colors: {
         dark: {
-          bg: '#0A0D14',
-          card: '#0F1318',
-          lighter: '#141820',
-          surface: '#1A1F2A',
+          bg: '#0A0E14',
+          card: '#0F151C',
+          lighter: '#141B23',
+          surface: '#1B2330',
         },
-        cyan: {
-          DEFAULT: '#00C2FF',
-          glow: '#00C2FF',
+        brand: {
+          DEFAULT: '#10B981',
+          light: '#34D399',
+          dark: '#059669',
+          glow: '#10B981',
         },
-        gold: {
-          DEFAULT: '#C9A84C',
+        mint: {
+          DEFAULT: '#2DD4BF',
+          light: '#5EEAD4',
         },
       },
       fontFamily: {
-        display: ['Inter', 'sans-serif'],
-        body: ['Plus Jakarta Sans', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        body: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
       },
       animation: {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
@@ -29,8 +32,8 @@ export default {
       },
       keyframes: {
         'glow-pulse': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 194, 255, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 194, 255, 0.6)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)' },
+          '50%': { boxShadow: '0 0 44px rgba(16, 185, 129, 0.55)' },
         },
         'flow': {
           '0%': { transform: 'translateX(0)' },
