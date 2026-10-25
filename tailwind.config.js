@@ -4,48 +4,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: {
-          bg: '#0A0E14',
-          card: '#0F151C',
-          lighter: '#141B23',
-          surface: '#1B2330',
-        },
-        brand: {
-          DEFAULT: '#10B981',
-          light: '#34D399',
-          dark: '#059669',
-          glow: '#10B981',
-        },
-        mint: {
-          DEFAULT: '#2DD4BF',
-          light: '#5EEAD4',
+        ink: '#0E0E0F',
+        panel: '#171717',
+        raised: '#1F1F20',
+        edge: 'rgba(255, 255, 255, 0.09)',
+        soft: '#C9C9C9',
+        dim: '#9C9C9C',
+        flame: {
+          DEFAULT: '#FF5B1A',
+          hot: '#FF7A2E',
+          deep: '#C2380E',
         },
       },
       fontFamily: {
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
-        body: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
-      animation: {
-        'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-        'flow': 'flow 3s ease-in-out infinite',
-        'float': 'float 6s ease-in-out infinite',
+      screens: {
+        // Desktop screens with little height, like 1366x768 laptops
+        short: { raw: '(min-width: 1024px) and (max-height: 820px)' },
       },
-      keyframes: {
-        'glow-pulse': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)' },
-          '50%': { boxShadow: '0 0 44px rgba(16, 185, 129, 0.55)' },
-        },
-        'flow': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(10px)' },
-        },
-        'float': {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-      },
-      backdropBlur: {
-        xs: '2px',
+      maxWidth: {
+        page: '72rem',
+        frame: '84rem',
       },
     },
   },
